@@ -1,2 +1,2 @@
-# ting-yard
+# thing-yard
 sdk
