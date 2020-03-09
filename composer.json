@@ -1,6 +1,6 @@
 {
     "name": "soarfreely/ting-yard",
-    "description": "one ting one yard",
+    "description": "one thing one yard",
     "keywords": [
         "sdk"
     ],
@@ -17,14 +17,15 @@
         "guzzlehttp/guzzle": "^6.3",
         "symfony/http-kernel": "^4.3",
         "symfony/http-foundation": "^4.3",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-curl": "*"
     },
         "require-dev": {
         "symfony/var-dumper": "^4.3"
     },
     "autoload": {
         "psr-4": {
-            "Soarfreely\\TingYard\\": "src/"
+            "ThingYard\\": "src/"
         }
     }
 }
