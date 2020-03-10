@@ -159,6 +159,29 @@ class KernelClient
     }
 
     /**
+     * @param $url
+     * @param array $data
+     * @param array $query
+     * @return array|object|ResponseInterface|string|Collection|null
+     * @throws AuthorizationException
+     * @throws BadRequestException
+     * @throws GuzzleException
+     * @throws InvalidConfigException
+     * @throws ResourceNotFoundException
+     * @throws ServiceInvalidException
+     * @throws ValidationException
+     * Date: 2020/3/9 Time: 下午4:45
+     */
+    public function httpDelJson($url, array $data = [], array $query = [])
+    {
+        if ($this->handleEmptyArray) {
+            $data = $this->handleJsonEmptyArray($data);
+        }
+
+        return $this->request($url, 'DELETE', ['query' => $query, 'json' => $data]);
+    }
+
+    /**
      * 发送 PATCH JSON 请求
      *
      * @param string $url
