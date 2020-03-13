@@ -6,8 +6,6 @@ use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LogLevel;
 use GuzzleHttp\Client;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\MessageFormatter;
 use ThingYard\Kernel\Http\Response;
@@ -129,7 +127,7 @@ class KernelClient
             $data = $this->handleJsonEmptyArray($data);
         }
 
-        return $this->request($url, 'POST', ['query' => $query, 'json' => $data]);
+        return $this->request($url, 'POST', $this->getOptions($data, $query));
     }
 
     /**
@@ -259,9 +257,9 @@ class KernelClient
      */
     public function request($url, $method = 'POST', array $options = [], $returnRaw = false)
     {
-//        if (empty($this->middlewares)) {
-//            $this->registerMiddleware();
-//        }
+        if (empty($this->middlewares)) {
+            $this->registerMiddleware();
+        }
 
         try {
             $response = $this->performRequest($url, $method, $options);
@@ -356,13 +354,13 @@ class KernelClient
     /**
      * 注册默认中间件
      */
-//    protected function registerMiddleware()
-//    {
-//        //$this->pushMiddleware($this->retryMiddleware(), 'retry');
-//        if ($this->app->offsetExists('log')) {
-//            $this->pushMiddleware($this->logMiddleware(), 'log');
-//        }
-//    }
+    protected function registerMiddleware()
+    {
+        //$this->pushMiddleware($this->retryMiddleware(), 'retry');
+        if ($this->app->offsetExists('log')) {
+            $this->pushMiddleware($this->logMiddleware(), 'log');
+        }
+    }
 
     /**
      * 重试中间件
@@ -390,35 +388,48 @@ class KernelClient
      *
      * @return callable
      */
-//    protected function logMiddleware()
-//    {
-//        $logger = $this->app['log'];
-//        $logLevel = LogLevel::INFO;
-//        $config = $this->app->config;
-//        $formatter = new MessageFormatter(
-//            $this->app->config->get('http.log_template', MessageFormatter::CLF)
-//        );
-//
-//        return function (callable $handler) use ($logger, $formatter, $logLevel, $config) {
-//            return function ($request, array $options) use ($handler, $logger, $formatter, $logLevel, $config) {
-//                return $handler($request, $options)->then(
-//                    function ($response) use ($logger, $request, $formatter, $logLevel, $config) {
-//                        if ($config->get('http.logging', true)) {
-//                            $message = $formatter->format($request, $response);
-//                            $logger->log($logLevel, $message);
-//                        }
-//                        return $response;
-//                    },
-//                    function ($reason) use ($logger, $request, $formatter) {
-//                        $response = $reason instanceof RequestException
-//                            ? $reason->getResponse()
-//                            : null;
-//                        $message = $formatter->format($request, $response, $reason);
-//                        $logger->notice($message);
-//                        return \GuzzleHttp\Promise\rejection_for($reason);
-//                    }
-//                );
-//            };
-//        };
-//    }
+    protected function logMiddleware()
+    {
+        $logger = $this->app['log'];
+        $logLevel = LogLevel::INFO;
+        $config = $this->app->config;
+        $formatter = new MessageFormatter(
+            $this->app->config->get('http.log_template', MessageFormatter::CLF)
+        );
+
+        return function (callable $handler) use ($logger, $formatter, $logLevel, $config) {
+            return function ($request, array $options) use ($handler, $logger, $formatter, $logLevel, $config) {
+                return $handler($request, $options)->then(
+                    function ($response) use ($logger, $request, $formatter, $logLevel, $config) {
+                        if ($config->get('http.logging', true)) {
+                            $message = $formatter->format($request, $response);
+                            $logger->log($logLevel, $message);
+                        }
+                        return $response;
+                    },
+                    function ($reason) use ($logger, $request, $formatter) {
+                        $response = $reason instanceof RequestException
+                            ? $reason->getResponse()
+                            : null;
+                        $message = $formatter->format($request, $response, $reason);
+                        $logger->notice($message);
+                        return \GuzzleHttp\Promise\rejection_for($reason);
+                    }
+                );
+            };
+        };
+    }
+
+    /**
+     * options
+     *
+     * @param $data
+     * @param array $query
+     * @return array
+     */
+    private function getOptions($data, $query = [])
+    {
+        return empty($query) ? ['json' => $data] : ['query' => $query, 'json' => $data];
+    }
+
 }
