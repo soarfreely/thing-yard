@@ -18,7 +18,7 @@ class YardRequestIdMiddleware extends BaseMiddleware
     public function onBefore(RequestInterface $request)
     {
         $request = $request->withHeader(
-            'x-request-id',
+            'X-REQUEST-ID',
             $this->app->getRequestId()
         );
 
