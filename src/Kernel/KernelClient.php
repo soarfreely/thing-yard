@@ -153,7 +153,7 @@ class KernelClient
             $data = $this->handleJsonEmptyArray($data);
         }
 
-        return $this->request($url, 'PUT', ['query' => $query, 'json' => $data]);
+        return $this->request($url, 'PUT', $this->getOptions($data, $query));
     }
 
     /**
@@ -170,13 +170,13 @@ class KernelClient
      * @throws ValidationException
      * Date: 2020/3/9 Time: 下午4:45
      */
-    public function httpDelJson($url, array $data = [], array $query = [])
+    public function httpDeleteJson($url, array $data = [], array $query = [])
     {
         if ($this->handleEmptyArray) {
             $data = $this->handleJsonEmptyArray($data);
         }
 
-        return $this->request($url, 'DELETE', ['query' => $query, 'json' => $data]);
+        return $this->request($url, 'DELETE', $this->getOptions($data, $query));
     }
 
     /**
