@@ -44,7 +44,7 @@ abstract class BusinessClient extends BaseClient
     {
         parent::__construct($app);
 
-        $this->setBaseUri();
+        $this->setBaseUri($app->config->get('business_host', ''));
 
         $this->setCompanyId();
 
@@ -73,7 +73,7 @@ abstract class BusinessClient extends BaseClient
      */
     public function setCompanyId()
     {
-        if (empty($companyId = $this->app->config->get('companyId', ''))) {
+        if (empty($companyId = $this->app->config->get('company_id', ''))) {
             throw new InvalidArgumentException('company id is expected');
         }
 
