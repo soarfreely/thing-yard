@@ -11,8 +11,8 @@ use ThingYard\Yard\Customer\CustomerProvider;
 /**
  * Class Application
  *
- * @property business
- * @property customer
+ * @property Business $business
+ * @property Customer $customer
  *
  * @package ThingYard
  */
