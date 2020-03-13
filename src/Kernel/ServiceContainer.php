@@ -46,6 +46,13 @@ class ServiceContainer extends Container
     protected $requestId = null;
 
     /**
+     *  token
+     *
+     * @var string
+     */
+    private $token = '';
+
+    /**
      * ServiceContainer constructor.
      * @param array $config
      * @param array $values
@@ -81,6 +88,25 @@ class ServiceContainer extends Container
     public function getRequestId()
     {
         return $this->requestId = $this->requestId ?? md5(json_encode($this->userConfig));
+    }
+
+    /**
+     * 设置口令
+     * @param $token
+     * @return $this
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+        return $this;
+    }
+
+    /** 获取口令
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->token;
     }
 
     /**
