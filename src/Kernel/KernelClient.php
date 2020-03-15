@@ -111,6 +111,7 @@ class KernelClient
      * @param array $data
      * @param array $query
      *
+     * @param bool $returnRaw
      * @return array|object|Collection|ResponseInterface|string
      *
      * @throws AuthorizationException
@@ -121,13 +122,13 @@ class KernelClient
      * @throws BadRequestException
      * @throws GuzzleException
      */
-    public function httpPostJson($url, array $data = [], array $query = [])
+    public function httpPostJson($url, array $data = [], array $query = [], $returnRaw = false)
     {
         if ($this->handleEmptyArray) {
             $data = $this->handleJsonEmptyArray($data);
         }
 
-        return $this->request($url, 'POST', $this->getOptions($data, $query));
+        return $this->request($url, 'POST', $this->getOptions($data, $query), $returnRaw);
     }
 
     /**
