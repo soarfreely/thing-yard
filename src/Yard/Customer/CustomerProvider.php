@@ -3,14 +3,13 @@
 namespace ThingYard\Yard\Customer;
 
 use Pimple\Container;
-use Pimple\ServiceProviderInterface;
-use ThingYard\Kernel\Middleware\YardRequestIdMiddleware;
+use ThingYard\Yard\YardProvider;
 
 /**
  * Class ServiceProvider
  * @package PgServiceSdk\Work
  */
-class CustomerProvider implements ServiceProviderInterface
+class CustomerProvider extends YardProvider
 {
     /**
      *
@@ -18,11 +17,9 @@ class CustomerProvider implements ServiceProviderInterface
      */
     public function register(Container $pimple)
     {
-        $pimple['customer_yard_module'] = 'customer';
+        parent::register($pimple);
 
-        $pimple['yard_request_id_middleware'] = function ($app) {
-            return new YardRequestIdMiddleware($app);
-        };
+        $pimple['customer_yard_module'] = 'customer';
 
         // C端相关
         $pimple['customer'] = function ($app) {
