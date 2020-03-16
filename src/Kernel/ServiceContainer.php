@@ -53,6 +53,13 @@ class ServiceContainer extends Container
     private $token = '';
 
     /**
+     * 头信息　serialId
+     *
+     * @var string
+     */
+    private $serialId = '';
+
+    /**
      * ServiceContainer constructor.
      * @param array $config
      * @param array $values
@@ -171,5 +178,27 @@ class ServiceContainer extends Container
     public function __set($name, $value)
     {
         $this->offsetSet($name, $value);
+    }
+
+    /**
+     * setSerialId
+     *
+     * @param $serialId
+     * @return $this
+     */
+    public function setSerialId($serialId)
+    {
+        $this->serialId = $serialId;
+        return $this;
+    }
+
+    /**
+     * getSerialId
+     *
+     * @return string
+     */
+    public function getSerialId()
+    {
+        return $this->serialId;
     }
 }
