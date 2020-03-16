@@ -5,6 +5,7 @@ namespace ThingYard\Yard;
 use ThingYard\Kernel\Exceptions\InvalidArgumentException;
 use ThingYard\Kernel\KernelClient;
 use ThingYard\Kernel\Middleware\BearerTokenMiddleware;
+use ThingYard\Kernel\Middleware\SerialIdMiddle;
 use ThingYard\Kernel\Middleware\YardRequestIdMiddleware;
 
 abstract class BaseClient extends KernelClient
@@ -46,6 +47,11 @@ abstract class BaseClient extends KernelClient
         $this->pushMiddleware(
             $this->app['token_middleware'],
             BearerTokenMiddleware::getAccessName()
+        );
+
+        $this->pushMiddleware(
+            $this->app['serial_middleware'],
+            SerialIdMiddle::getAccessName()
         );
 
         parent::registerMiddleware();
