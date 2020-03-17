@@ -104,9 +104,12 @@ trait HttpRequest
     public function request($url, $method = 'POST', $option = [])
     {
         $method = strtoupper($method);
-
-        $options = array_merge(static::$default, $option, ['handler' => $this->getHandlerStack()]);
-
+        $options = array_merge(
+            static::$default,
+            $option,
+            ['handler' => $this->getHandlerStack()],
+            ['debug' => boolval($this->app->config['http.debug'])]
+        );
         if (property_exists($this, 'baseUri') && !is_null($this->baseUri)) {
             $options['base_uri'] = $this->baseUri;
         }
